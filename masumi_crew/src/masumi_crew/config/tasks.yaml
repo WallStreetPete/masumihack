@@ -1,0 +1,19 @@
+apollo_search_task:
+  description: >
+    Search for {search_target} in the {industry} industry using Apollo.
+    
+    You MUST return your results in valid JSON format with the following structure:
+    [
+        {
+            "first_name": "First Name",
+            "last_name": "Last Name",
+            "organization_name": "Company Name",
+            "linkedin_url": "LinkedIn URL"
+        },
+        ...
+    ]
+    
+    Find at least {limit} qualified {search_target} in the {industry} industry.
+  expected_output: >
+    JSON array containing at least {limit} qualified {search_target} in the {industry} industry with their first name, last name, company, and linkedin URL
+  agent: apollo_agent

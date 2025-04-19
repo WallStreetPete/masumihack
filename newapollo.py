@@ -4,7 +4,11 @@ from crewai_tools import BraveSearchTool
 import json
 import time
 import requests
+from dotenv import load_dotenv
 import os
+
+# Load environment variables
+load_dotenv()
 
 # Load Apollo toolset
 toolset = ComposioToolSet()
@@ -70,7 +74,7 @@ crew = Crew(
 result = crew.kickoff()
 
 # Apollo API key for enrichment
-api_key = "l-UG2w5z1LeZOzJya2JWBg"
+api_key = os.getenv("APOLLO_API_KEY")
 
 # Endpoint for people match
 url = "https://api.apollo.io/api/v1/people/match?reveal_personal_emails=true"

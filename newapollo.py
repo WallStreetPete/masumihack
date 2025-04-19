@@ -1,12 +1,17 @@
 from crewai import Agent, Crew, Task, LLM
 from composio_crewai import ComposioToolSet, Action, App
+from crewai_tools import BraveSearchTool
 import json
 import time
 import requests
+import os
 
 # Load Apollo toolset
 toolset = ComposioToolSet()
 tools = toolset.get_tools(apps=[App.APOLLO])
+
+# Initialize Brave Search tool
+brave_search = BraveSearchTool(n_results=3)
 
 # Use a model with larger context window
 llm = LLM(
@@ -165,6 +170,20 @@ try:
                     enriched_contact['company_size'] = org_data.get('size')
                     enriched_contact['company_industry'] = org_data.get('industry')
                     enriched_contact['company_website'] = org_data.get('website_url')
+            
+            # Perform Brave Search for additional context
+            try:
+                search_query = f"{organization}"
+                search_results = brave_search.run(search_query=search_query)
+                enriched_contact['brave_search_results'] = search_results
+                print(f"Added Brave Search results for: {full_name}")
+                # Add delay to respect rate limit of 1 request per second
+                time.sleep(1)
+            except Exception as e:
+                print(f"Error performing Brave Search for {full_name}: {e}")
+                enriched_contact['brave_search_results'] = []
+                # Still add delay even if search fails
+                time.sleep(1)
             
             enriched_contacts.append(enriched_contact)
             print(f"Enriched contact: {full_name}")
